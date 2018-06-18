@@ -1,4 +1,4 @@
-#Color Contrast
+# Color Contrast
 
 Color Contrast helps to determine the legibility of text based on the [WCAG 2.0](https://www.w3.org/TR/WCAG20/#guidelines) of text and background contrast ratios. Reading a text with enough contrast with the background can help people with moderately low vision.
 
