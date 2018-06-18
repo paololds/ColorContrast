@@ -8,6 +8,10 @@ Levels of contrast:
 
 (Large-scale text and images of large-scale text have a contrast ratio of at least 3:1)
 
+## Preview
+
+![](https://raw.githubusercontent.com/paololds/ColorContrast/master/cc1.png)
+![](https://raw.githubusercontent.com/paololds/ColorContrast/master/cc2.png)
 
 ## License
 
