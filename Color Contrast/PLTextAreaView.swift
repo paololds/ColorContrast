@@ -21,10 +21,10 @@ class PLTextAreaView: NSView {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        let stepperValue = UserDefaults.standard.integer(forKey: PLUserDefaultsKey.fontSize)
+        let stepperValue = UserDefaults.standard.integer(forKey: UserDefaults.key.fontSize.rawValue)
         fontSizeStepper?.integerValue = stepperValue
         fontSizeLabel?.stringValue = String(stepperValue)
-        let fontStyleValue = UserDefaults.standard.integer(forKey: PLUserDefaultsKey.fontStyle)
+        let fontStyleValue = UserDefaults.standard.integer(forKey: UserDefaults.key.fontStyle.rawValue)
         fontStylePicker?.selectItem(at: fontStyleValue)
     }
     

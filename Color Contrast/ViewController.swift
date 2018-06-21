@@ -8,14 +8,6 @@
 
 import Cocoa
 
-enum PLUserDefaultsKey{
-    static let colorFormat = "color.format"
-    static let colorTextHex = "color.text.hex"
-    static let colorBackgroundHex = "color.background.hex"
-    static let fontSize = "font.size"
-    static let fontStyle = "font.style"
-}
-
 enum PLFontStyle: Int{
     case regular
     case bold
@@ -39,12 +31,12 @@ class ViewController: NSViewController, PLColorViewDelegate, PLTextAreaDelegate,
         textAreaView?.delegate = self
         ratioGridView?.delegate = self
         
-        let tColor = UserDefaults.standard.string(forKey:PLUserDefaultsKey.colorTextHex) ?? "#000000"
-        let bColor = UserDefaults.standard.string(forKey:PLUserDefaultsKey.colorBackgroundHex) ?? "#ffffff"
+        let tColor = UserDefaults.standard.string(forKey:UserDefaults.key.colorTextHex.rawValue) ?? "#000000"
+        let bColor = UserDefaults.standard.string(forKey:UserDefaults.key.colorBackgroundHex.rawValue) ?? "#ffffff"
         ratioGridView?.textColor = NSColor(hexString: tColor)
         ratioGridView?.backgroundColor = NSColor(hexString: bColor)
         
-        let colorConfiguraton = UserDefaults.standard.integer(forKey: PLUserDefaultsKey.colorFormat)
+        let colorConfiguraton = UserDefaults.standard.integer(forKey: UserDefaults.key.colorFormat.rawValue)
         let colorFormat = PLColorFormat(rawValue: colorConfiguraton) ?? .rgb
         loadColorConfiguration(colorFormat: colorFormat)
         refreshContrastRatio()
@@ -103,7 +95,7 @@ class ViewController: NSViewController, PLColorViewDelegate, PLTextAreaDelegate,
     @IBAction func colorFormatDidChange(sender:NSPopUpButton){
         guard let colorFormat = PLColorFormat(rawValue: sender.indexOfSelectedItem) else{ return }
         UserDefaults.standard.set(colorFormat.rawValue,
-                                  forKey: PLUserDefaultsKey.colorFormat)
+                                  forKey: UserDefaults.key.colorFormat.rawValue)
         loadColorConfiguration(colorFormat: colorFormat)
     }
     
@@ -165,21 +157,21 @@ class ViewController: NSViewController, PLColorViewDelegate, PLTextAreaDelegate,
     
     private func registerDefaults(){
         UserDefaults.standard.register(defaults:
-            [PLUserDefaultsKey.colorFormat : PLColorFormat.rgb.rawValue,
-             PLUserDefaultsKey.fontSize : 15,
-             PLUserDefaultsKey.fontStyle : PLFontStyle.regular.rawValue,
-             PLUserDefaultsKey.colorTextHex : "#000000",
-             PLUserDefaultsKey.colorBackgroundHex : "#ffffff"
+            [UserDefaults.key.colorFormat.rawValue : PLColorFormat.rgb.rawValue,
+             UserDefaults.key.fontSize.rawValue : 15,
+             UserDefaults.key.fontStyle.rawValue : PLFontStyle.regular.rawValue,
+             UserDefaults.key.colorTextHex.rawValue : "#000000",
+             UserDefaults.key.colorBackgroundHex.rawValue : "#ffffff"
             ])
     }
     
     private func saveDefaults(){
         guard let fontSize = textAreaView?.fontSizeStepper?.integerValue else{ return }
         UserDefaults.standard.set(fontSize,
-                                  forKey: PLUserDefaultsKey.fontSize)
+                                  forKey: UserDefaults.key.fontSize.rawValue)
         guard let selectedStyle = textAreaView?.fontStylePicker?.indexOfSelectedItem else { return }
         UserDefaults.standard.set(selectedStyle,
-                                  forKey: PLUserDefaultsKey.fontStyle)
+                                  forKey: UserDefaults.key.fontStyle.rawValue)
         guard let textColor = ratioGridView?.textColor,
             let backgroundColor = ratioGridView?.backgroundColor else { return }
         
@@ -187,8 +179,8 @@ class ViewController: NSViewController, PLColorViewDelegate, PLTextAreaDelegate,
         let backgroundHex = backgroundColor.hexValue
         
         UserDefaults.standard.setValue(textHex,
-                                       forKey: PLUserDefaultsKey.colorTextHex)
+                                       forKey: UserDefaults.key.colorTextHex.rawValue)
         UserDefaults.standard.setValue(backgroundHex,
-                                       forKey: PLUserDefaultsKey.colorBackgroundHex)
+                                       forKey: UserDefaults.key.colorBackgroundHex.rawValue)
     }
 }

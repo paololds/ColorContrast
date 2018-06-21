@@ -21,15 +21,28 @@ class PLHEXColorView: PLColorView {
     }
     
     private func commonInit(){
-        let textField = NSTextField(string: "")
-        self.addSubview(textField)
-        textField.placeholderString = "Hex color"
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
-        textField.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-        textField.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-        textField.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
         
+        let gridView = NSGridView()
+        gridView.xPlacement = .fill
+        gridView.yPlacement = .fill
+        self.addSubview(gridView)
+        gridView.translatesAutoresizingMaskIntoConstraints = false
+        
+        gridView.leadingAnchor.constraint(equalTo: self.leadingAnchor ).isActive = true
+        gridView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+        gridView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+        gridView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+
+        let hexLabel = NSTextField(labelWithString: "Hex")
+        gridView.addColumn(with: [hexLabel])
+        
+        let textField = NSTextField(string: "")
+        textField.placeholderString = "#ffffff"
+
+        gridView.addColumn(with: [textField])
+        
+        gridView.cell(atColumnIndex: 0, rowIndex: 0).yPlacement = .center
+
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(hexColorDidChange(notif:)),
                                                name: NSControl.textDidChangeNotification,

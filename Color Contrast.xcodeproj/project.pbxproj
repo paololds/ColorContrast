@@ -15,6 +15,7 @@
 		528BD9B120D06C01000B668A /* Color_ContrastUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 528BD9B020D06C01000B668A /* Color_ContrastUITests.swift */; };
 		528BD9BF20D06C56000B668A /* PLColorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 528BD9BE20D06C56000B668A /* PLColorView.swift */; };
 		529864DA20D3B64200437CDA /* PLWCAGGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529864D920D3B64200437CDA /* PLWCAGGridView.swift */; };
+		52D0E3C920DA615B00EEF63C /* PLUserDefaultsExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D0E3C820DA615B00EEF63C /* PLUserDefaultsExtension.swift */; };
 		52E26B5D20D3F92300CF90F4 /* PLTextAreaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E26B5C20D3F92300CF90F4 /* PLTextAreaView.swift */; };
 		52E26B5F20D4053800CF90F4 /* PLRatioGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E26B5E20D4053800CF90F4 /* PLRatioGridView.swift */; };
 		52E52FE220D5235300C8F0AA /* PLNSColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E52FE120D5235300C8F0AA /* PLNSColorExtension.swift */; };
@@ -55,6 +56,7 @@
 		528BD9B220D06C01000B668A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		528BD9BE20D06C56000B668A /* PLColorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PLColorView.swift; sourceTree = "<group>"; };
 		529864D920D3B64200437CDA /* PLWCAGGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PLWCAGGridView.swift; sourceTree = "<group>"; };
+		52D0E3C820DA615B00EEF63C /* PLUserDefaultsExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PLUserDefaultsExtension.swift; sourceTree = "<group>"; };
 		52E26B5C20D3F92300CF90F4 /* PLTextAreaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PLTextAreaView.swift; sourceTree = "<group>"; };
 		52E26B5E20D4053800CF90F4 /* PLRatioGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PLRatioGridView.swift; sourceTree = "<group>"; };
 		52E52FE120D5235300C8F0AA /* PLNSColorExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PLNSColorExtension.swift; sourceTree = "<group>"; };
@@ -147,6 +149,7 @@
 			isa = PBXGroup;
 			children = (
 				52E52FE120D5235300C8F0AA /* PLNSColorExtension.swift */,
+				52D0E3C820DA615B00EEF63C /* PLUserDefaultsExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -297,6 +300,7 @@
 				528BD9BF20D06C56000B668A /* PLColorView.swift in Sources */,
 				529864DA20D3B64200437CDA /* PLWCAGGridView.swift in Sources */,
 				52F5DB2C20D15F4E0099C36E /* PLHEXColorView.swift in Sources */,
+				52D0E3C920DA615B00EEF63C /* PLUserDefaultsExtension.swift in Sources */,
 				52E26B5F20D4053800CF90F4 /* PLRatioGridView.swift in Sources */,
 				528BD99520D06C00000B668A /* ViewController.swift in Sources */,
 				528BD99320D06C00000B668A /* AppDelegate.swift in Sources */,

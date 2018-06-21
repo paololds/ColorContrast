@@ -46,6 +46,10 @@ class PLRGBColorView: PLColorView {
         greenTextField.alignment = .right
         blueTextField.alignment = .right
         
+        redTextField.placeholderString = "0-255"
+        greenTextField.placeholderString = "0-255"
+        blueTextField.placeholderString = "0-255"
+
         redTextField.nextKeyView = greenTextField
         greenTextField.nextKeyView = blueTextField
         blueTextField.nextKeyView = redTextField
