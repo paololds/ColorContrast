@@ -8,57 +8,50 @@
 
 import Cocoa
 
-protocol PLTextAreaDelegate:AnyObject {
-    func textAreaNewTextAndBackgroundColor() -> (NSColor,NSColor)?
-}
+typealias ComparableColor = (NSColor,NSColor)
 
 class PLTextAreaView: NSView {
-    @IBOutlet weak var textArea: NSTextView?
-    @IBOutlet weak private var fontSizeLabel:NSTextField?
-    @IBOutlet weak var fontSizeStepper:NSStepper?
-    @IBOutlet weak var fontStylePicker: NSPopUpButton?
-    weak var delegate:PLTextAreaDelegate?
-
+    
+    @IBOutlet private var textArea: NSTextView!
+    @IBOutlet private var fontSizeLabel:NSTextField!
+    @IBOutlet private var fontSizeStepper:NSStepper!
+    @IBOutlet private var fontStylePicker: NSPopUpButton!
+    
+    let appUserDefaults = AppUserDefaults()
+    
     override func awakeFromNib() {
         super.awakeFromNib()
-        let stepperValue = UserDefaults.standard.integer(forKey: UserDefaults.key.fontSize.rawValue)
-        fontSizeStepper?.integerValue = stepperValue
-        fontSizeLabel?.stringValue = String(stepperValue)
-        let fontStyleValue = UserDefaults.standard.integer(forKey: UserDefaults.key.fontStyle.rawValue)
-        fontStylePicker?.selectItem(at: fontStyleValue)
+        
+        let stepperValue = appUserDefaults.fontSize
+        fontSizeStepper.integerValue = stepperValue
+        fontSizeLabel.stringValue = String(stepperValue)
+        let fontStyleValue = appUserDefaults.fontStyle
+        fontStylePicker.selectItem(at: Int(fontStyleValue.rawValue))
     }
     
     @IBAction func fontStyleDidChange(sender:NSPopUpButton){
-        updateTextArea()
+        updateText()
     }
     
     @IBAction func fontSizeDidChange(sender:NSStepper){
         let stepperValue = sender.integerValue
-        fontSizeLabel?.stringValue = String(stepperValue)
-        updateTextArea()
+        fontSizeLabel.stringValue = String(stepperValue)
+        updateText()
     }
     
-    func updateTextArea(){
-        guard let fontSize = fontSizeStepper?.integerValue else { return }
-        guard let selectedStyle = fontStylePicker?.indexOfSelectedItem else { return }
+    private func updateText(){
+        let fontSize = fontSizeStepper.integerValue
+        let selectedStyle = fontStylePicker.indexOfSelectedItem
         let fontStyle = PLFontStyle(rawValue: selectedStyle) ?? .regular
-        var fontWeight:NSFont.Weight
-        
-        switch fontStyle {
-        case .regular:
-            fontWeight = .regular
-            break
-        case .bold:
-            fontWeight = .bold
-            break
-        }
-        
         let font = NSFont.systemFont(ofSize: CGFloat(fontSize),
-                                     weight: fontWeight)
-        textArea?.font = font
-        
-        guard let (textColor, backgroundColor) = delegate?.textAreaNewTextAndBackgroundColor() else { return }
-        textArea?.textColor = textColor
-        textArea?.backgroundColor = backgroundColor
+                                     weight: (fontStyle == .regular) ? .regular : .bold)
+        textArea.font = font
+        appUserDefaults.fontSize = fontSize
+        appUserDefaults.fontStyle = fontStyle
+    }
+    
+    func updateColors(textColor:NSColor, backgroundColor:NSColor){
+        textArea.textColor = textColor
+        textArea.backgroundColor = backgroundColor
     }
 }

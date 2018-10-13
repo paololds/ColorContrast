@@ -8,179 +8,124 @@
 
 import Cocoa
 
-enum PLFontStyle: Int{
-    case regular
-    case bold
-}
-
-class ViewController: NSViewController, PLColorViewDelegate, PLTextAreaDelegate, PLRatioGridViewDelegate {
+class ViewController: NSViewController {
     
-    @IBOutlet weak var textFormatContainerView: NSView?
-    @IBOutlet weak var backgroundFormatContainerView: NSView?
-    @IBOutlet weak var colorFormatPicker: NSPopUpButton?
-    @IBOutlet weak var ratioGridView: PLRatioGridView?
-    @IBOutlet weak var WCGAGridView: PLWCAGGridView?
-    @IBOutlet weak var textAreaView: PLTextAreaView?
+    @IBOutlet private var leftContainerView: PLColorFormatContainerView!
+    @IBOutlet private var rightContainerView: PLColorFormatContainerView!
+    @IBOutlet private var colorFormatPicker: NSPopUpButton!
+    @IBOutlet private var colorRatioGridView: PLRatioGridView!
+    @IBOutlet private var wcgaGridView: PLWCAGGridView!
+    @IBOutlet private var bottomTextAreaView: PLTextAreaView!
     
-    var currentColorFormat:PLColorFormat?
+    let appUserDefaults = AppUserDefaults()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        registerDefaults()
-        textAreaView?.delegate = self
-        ratioGridView?.delegate = self
-        
-        let tColor = UserDefaults.standard.string(forKey:UserDefaults.key.colorTextHex.rawValue) ?? "#000000"
-        let bColor = UserDefaults.standard.string(forKey:UserDefaults.key.colorBackgroundHex.rawValue) ?? "#ffffff"
-        ratioGridView?.textColor = NSColor(hexString: tColor)
-        ratioGridView?.backgroundColor = NSColor(hexString: bColor)
-        
-        let colorConfiguraton = UserDefaults.standard.integer(forKey: UserDefaults.key.colorFormat.rawValue)
-        let colorFormat = PLColorFormat(rawValue: colorConfiguraton) ?? .rgb
-        loadColorConfiguration(colorFormat: colorFormat)
+        colorRatioGridView.delegate = self
+        setupColorContainers()
         refreshContrastRatio()
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(ViewController.textColorViewDidChangeNotification(notification:)),
+                                               name: .didChangeTextColor,
+                                               object: nil)
     }
     
-    override func viewDidDisappear() {
-        saveDefaults()
-    }
-    
-    //MARK: Color Configuration
-    
-    private func loadColorConfiguration(colorFormat:PLColorFormat){
+    func setupColorContainers(){
         
-        if currentColorFormat?.rawValue == colorFormat.rawValue {return}
-        currentColorFormat = colorFormat
-        colorFormatPicker?.selectItem(at: colorFormat.rawValue)
+        let colorFormat = appUserDefaults.colorFormat
         
-        var textColorView:PLColorView
-        var backgroundColorView:PLColorView
-        switch colorFormat{
-        case .rgb:
-            textColorView = PLRGBColorView()
-            backgroundColorView = PLRGBColorView()
-            break
-        case .hex:
-            textColorView = PLHEXColorView()
-            backgroundColorView = PLHEXColorView()
-            break
-        }
+        colorFormatPicker.selectItem(at: colorFormat.rawValue)
         
-        textColorView.type = .text
-        backgroundColorView.type = .background
-        
-        guard let textContainer = textFormatContainerView else { return }
-        guard let backgroundContainer = backgroundFormatContainerView else { return }
-        addColorView(colorView: textColorView, container: textContainer)
-        addColorView(colorView: backgroundColorView, container: backgroundContainer)
-        
-        guard let textColor = ratioGridView?.textColor else { return }
-        guard let bgColor = ratioGridView?.backgroundColor else { return }
-        textColorView.updateColor(color: textColor)
-        backgroundColorView.updateColor(color: bgColor)
-    }
-    
-    private func addColorView(colorView:PLColorView, container:NSView){
-        container.subviews.removeAll()
-        container.addSubview(colorView)
-        colorView.delegate = self
-        colorView.translatesAutoresizingMaskIntoConstraints = false
-        colorView.topAnchor.constraint(equalTo: container.topAnchor).isActive = true
-        colorView.bottomAnchor.constraint(equalTo: container.bottomAnchor).isActive = true
-        colorView.leftAnchor.constraint(equalTo: container.leftAnchor).isActive = true
-        colorView.rightAnchor.constraint(equalTo: container.rightAnchor).isActive = true
+        leftContainerView.setupColorFormatView(colorFormat: colorFormat,
+                                             colorType: .text,
+                                             color: colorRatioGridView.textColor)
+        rightContainerView.setupColorFormatView(colorFormat: colorFormat,
+                                              colorType: .background,
+                                              color: colorRatioGridView.backgroundColor)
     }
     
     @IBAction func colorFormatDidChange(sender:NSPopUpButton){
-        guard let colorFormat = PLColorFormat(rawValue: sender.indexOfSelectedItem) else{ return }
-        UserDefaults.standard.set(colorFormat.rawValue,
-                                  forKey: UserDefaults.key.colorFormat.rawValue)
-        loadColorConfiguration(colorFormat: colorFormat)
+        
+        guard let selectedColorFormat = PLColorFormat(rawValue: sender.indexOfSelectedItem) else { return }
+        if appUserDefaults.colorFormat == selectedColorFormat { return }
+        appUserDefaults.colorFormat = selectedColorFormat
+        setupColorContainers()
     }
-    
-    //MARK: Ratio View
-    
-    func ratioViewDidChangeValue(color: NSColor?, type: PLColorType?){
-        
-        guard let type = type else { return }
-        var colorFormatView:PLColorView?;
-        
-        switch type {
-        case .text:
-            colorFormatView = textFormatContainerView?.subviews.first as? PLColorView
-            break
-        case .background:
-            colorFormatView = backgroundFormatContainerView?.subviews.first as? PLColorView
-            break
-        }
-        
-        colorFormatView?.updateColor(color: color)
-        refreshContrastRatio()
-    }
-    
-    //MARK: Color View
     
     private func refreshContrastRatio(){
-        textAreaView?.updateTextArea()
-        ratioGridView?.updateColorContrastRatio()
-        guard let ratio = ratioGridView?.contrastRatio else { return }
-        WCGAGridView?.setNewRatioValue(value: ratio)
+        
+        guard let textColor = colorRatioGridView.textColor,
+            let backgroundColor = colorRatioGridView.backgroundColor else {
+                return
+        }
+        
+        bottomTextAreaView.updateColors(textColor: textColor,
+                                        backgroundColor: backgroundColor)
+        
+        let contrastRatio = calculateContrastRatio(firstColor: textColor,
+                                                   secondColor: backgroundColor)
+        
+        colorRatioGridView.updateContrastRatio(contrastRatio: contrastRatio)
+        wcgaGridView.updateContrastRatio(contrastRatio: contrastRatio)
     }
+}
+
+// Mark: RatioGridView Delegate
+extension ViewController: PLRatioGridViewDelegate{
     
-    func colorViewDidChangeValue(color: NSColor?, type: PLColorType?) {
+    func ratioViewDidChangeValue(color: NSColor?, colorType: PLColorType?){
         
-        guard let type = type else { return }
-        guard let color = color else { return }
+        guard let colorType = colorType else { return }
+        let formatView:PLColorFormatView?;
         
-        switch type {
+        switch colorType {
         case .text:
-            ratioGridView?.textColor = color
-            break
+            formatView = leftContainerView.colorFormatView
         case .background:
-            ratioGridView?.backgroundColor = color
-            break
+            formatView = rightContainerView.colorFormatView
+        }
+        
+        formatView?.updateColor(color: color)
+        refreshContrastRatio()
+    }
+}
+
+// Mark: Notifications
+extension ViewController {
+    
+    @objc func textColorViewDidChangeNotification(notification:Notification){
+        
+        guard let notificationObject = notification.object as? ColorFormatObject else { return }
+        guard let colorType = notificationObject.type else { return }
+        
+        switch colorType {
+        case .text:
+            colorRatioGridView.textColor = notificationObject.color
+        case .background:
+            colorRatioGridView.backgroundColor = notificationObject.color
         }
         
         refreshContrastRatio()
     }
+}
+
+// Mark: Luminance
+extension ViewController{
     
-    //MARK: Text Area View
-    
-    func textAreaNewTextAndBackgroundColor() -> (NSColor, NSColor)? {
-        guard let textColor = ratioGridView?.textColor else {return nil}
-        guard let backgroundColor = ratioGridView?.backgroundColor else {return nil}
-        return (textColor,backgroundColor)
+    private func calculateContrastRatio(firstColor:NSColor, secondColor:NSColor) -> CGFloat {
+        let luminanceFirstColor = getRelativeLuminance(color: firstColor)
+        let luminanceSecondColor = getRelativeLuminance(color: secondColor)
+        return luminanceFirstColor > luminanceSecondColor ? (luminanceFirstColor + 0.05) / (luminanceSecondColor + 0.05) : (luminanceSecondColor + 0.05) / (luminanceFirstColor + 0.05)
     }
     
-    //MARK: User Defaults
-    
-    private func registerDefaults(){
-        UserDefaults.standard.register(defaults:
-            [UserDefaults.key.colorFormat.rawValue : PLColorFormat.rgb.rawValue,
-             UserDefaults.key.fontSize.rawValue : 15,
-             UserDefaults.key.fontStyle.rawValue : PLFontStyle.regular.rawValue,
-             UserDefaults.key.colorTextHex.rawValue : "#000000",
-             UserDefaults.key.colorBackgroundHex.rawValue : "#ffffff"
-            ])
-    }
-    
-    private func saveDefaults(){
-        guard let fontSize = textAreaView?.fontSizeStepper?.integerValue else{ return }
-        UserDefaults.standard.set(fontSize,
-                                  forKey: UserDefaults.key.fontSize.rawValue)
-        guard let selectedStyle = textAreaView?.fontStylePicker?.indexOfSelectedItem else { return }
-        UserDefaults.standard.set(selectedStyle,
-                                  forKey: UserDefaults.key.fontStyle.rawValue)
-        guard let textColor = ratioGridView?.textColor,
-            let backgroundColor = ratioGridView?.backgroundColor else { return }
-        
-        let textHex = textColor.hexValue
-        let backgroundHex = backgroundColor.hexValue
-        
-        UserDefaults.standard.setValue(textHex,
-                                       forKey: UserDefaults.key.colorTextHex.rawValue)
-        UserDefaults.standard.setValue(backgroundHex,
-                                       forKey: UserDefaults.key.colorBackgroundHex.rawValue)
+    private func getRelativeLuminance(color:NSColor) -> CGFloat{
+        let (redColor,greenColor,blueColor,_) = color.getRGBFromColor()
+        let luminanceRed = (redColor <= 0.03928) ? redColor/12.92 : pow(((redColor+0.055)/1.055), 2.4)
+        let luminanceGreen = (greenColor <= 0.03928) ? greenColor/12.92 : pow(((greenColor+0.055)/1.055), 2.4)
+        let luminanceBlue = (blueColor <= 0.03928) ? blueColor/12.92 : pow(((blueColor+0.055)/1.055), 2.4)
+        let luminance = (0.2126 * luminanceRed + 0.7152 * luminanceGreen + 0.0722 * luminanceBlue)
+        return luminance
     }
 }

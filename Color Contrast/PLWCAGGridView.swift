@@ -8,38 +8,28 @@
 
 import Cocoa
 
+enum WCAGValue : CGFloat {
+    case AALarge = 3.0
+    case AANormal_AAALarge = 4.5
+    case AAANormal = 7.0
+}
+
+enum WCAGResult : String {
+    case ok = "Ok"
+    case fail  = "Fail"
+}
+
 class PLWCAGGridView: NSGridView {
     
-    @IBOutlet weak private var wcagAANormalTextField:NSTextField?
-    @IBOutlet weak private var wcagAAANormalTextField:NSTextField?
-    @IBOutlet weak private var wcagAALargeTextField:NSTextField?
-    @IBOutlet weak private var wcagAAALargeTextField:NSTextField?
+    @IBOutlet private var wcagAANormalTextField:NSTextField!
+    @IBOutlet private var wcagAAANormalTextField:NSTextField!
+    @IBOutlet private var wcagAALargeTextField:NSTextField!
+    @IBOutlet private var wcagAAALargeTextField:NSTextField!
     
-    func setNewRatioValue(value: CGFloat){
-        
-        let okValue = "Ok"
-        let failValue = "Fail"
-        
-        if value >= 7 {
-            wcagAANormalTextField?.stringValue = okValue
-            wcagAAANormalTextField?.stringValue = okValue
-            wcagAALargeTextField?.stringValue = okValue
-            wcagAAALargeTextField?.stringValue = okValue
-        }else if value >= 4.5{
-            wcagAANormalTextField?.stringValue = okValue
-            wcagAAANormalTextField?.stringValue = failValue
-            wcagAALargeTextField?.stringValue = okValue
-            wcagAAALargeTextField?.stringValue = okValue
-        }else if value >= 3{
-            wcagAANormalTextField?.stringValue = failValue
-            wcagAAANormalTextField?.stringValue = failValue
-            wcagAALargeTextField?.stringValue = okValue
-            wcagAAALargeTextField?.stringValue = failValue
-        }else{
-            wcagAANormalTextField?.stringValue = failValue
-            wcagAAANormalTextField?.stringValue = failValue
-            wcagAALargeTextField?.stringValue = failValue
-            wcagAAALargeTextField?.stringValue = failValue
-        }
+    func updateContrastRatio(contrastRatio: CGFloat){
+        wcagAAANormalTextField.stringValue = (contrastRatio >= WCAGValue.AAANormal.rawValue) ? WCAGResult.ok.rawValue : WCAGResult.fail.rawValue
+        wcagAANormalTextField.stringValue = (contrastRatio >= WCAGValue.AANormal_AAALarge.rawValue) ? WCAGResult.ok.rawValue : WCAGResult.fail.rawValue
+        wcagAAALargeTextField.stringValue = (contrastRatio >= WCAGValue.AANormal_AAALarge.rawValue) ? WCAGResult.ok.rawValue : WCAGResult.fail.rawValue
+        wcagAALargeTextField.stringValue = (contrastRatio >= WCAGValue.AALarge.rawValue) ? WCAGResult.ok.rawValue : WCAGResult.fail.rawValue
     }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14269.12" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14269.12"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14313.18"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -672,7 +672,7 @@
                 <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75" y="0.0"/>
+            <point key="canvasLocation" x="68" y="-144"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
@@ -777,9 +777,9 @@
                                     </gridCell>
                                 </gridCells>
                                 <connections>
-                                    <outlet property="backgroundColorButton" destination="ZhW-kx-bzv" id="GB3-y1-M5c"/>
-                                    <outlet property="ratioLabel" destination="pAP-HF-o6j" id="4DA-AV-xXt"/>
-                                    <outlet property="textColorButton" destination="ux7-fV-ipl" id="Y3f-ja-vFA"/>
+                                    <outlet property="coloRatioLabel" destination="pAP-HF-o6j" id="Vo7-Iw-YLc"/>
+                                    <outlet property="leftColorArea" destination="ux7-fV-ipl" id="oFC-OF-EYr"/>
+                                    <outlet property="rightColorArea" destination="ZhW-kx-bzv" id="frJ-Hc-Mql"/>
                                 </connections>
                             </gridView>
                             <gridView xPlacement="leading" yPlacement="bottom" rowAlignment="none" translatesAutoresizingMaskIntoConstraints="NO" id="f92-bH-JXX" customClass="PLWCAGGridView" customModule="Color_Contrast" customModuleProvider="target">
@@ -907,17 +907,17 @@
                                     <outlet property="wcagAANormalTextField" destination="gxY-9a-ODy" id="MbY-or-vc3"/>
                                 </connections>
                             </gridView>
-                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="bhd-Z4-bg3">
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="bhd-Z4-bg3" customClass="PLColorFormatContainerView" customModule="Color_Contrast" customModuleProvider="target">
                                 <rect key="frame" x="66" y="193" width="100" height="132"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="100" id="bws-OZ-AHy"/>
                                 </constraints>
                             </customView>
-                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="swT-Gb-Kye">
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="swT-Gb-Kye" customClass="PLColorFormatContainerView" customModule="Color_Contrast" customModuleProvider="target">
                                 <rect key="frame" x="384" y="193" width="100" height="132"/>
                             </customView>
                             <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sV5-AM-SGq">
-                                <rect key="frame" x="243" y="246" width="65" height="26"/>
+                                <rect key="frame" x="243" y="246" width="65" height="25"/>
                                 <popUpButtonCell key="cell" type="push" title="RGB" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="5Xh-GN-p6T" id="2z0-hR-VVo">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="menu"/>
@@ -961,7 +961,7 @@
                                             <gridCell row="zix-Bb-2xg" column="6ed-VK-VZ8" id="Nay-k1-imm">
                                                 <textField key="contentView" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="1yU-kW-PID">
                                                     <rect key="frame" x="64" y="5" width="24" height="17"/>
-                                                    <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="0" id="i9d-vV-A6H">
+                                                    <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="15" id="i9d-vV-A6H">
                                                         <font key="font" usesAppearanceFont="YES"/>
                                                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -989,7 +989,7 @@
                                             </gridCell>
                                             <gridCell row="zix-Bb-2xg" column="313-Mk-5c0" id="J3C-tJ-t0y">
                                                 <popUpButton key="contentView" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="edR-RK-wJv">
-                                                    <rect key="frame" x="292" y="0.0" width="85" height="26"/>
+                                                    <rect key="frame" x="292" y="0.0" width="85" height="25"/>
                                                     <popUpButtonCell key="cell" type="push" title="Regular" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="EDs-SP-pcT" id="yc6-Uk-Vv6">
                                                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                                         <font key="font" metaFont="menu"/>
@@ -1088,17 +1088,17 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="WCGAGridView" destination="f92-bH-JXX" id="eHU-O8-ZP6"/>
-                        <outlet property="backgroundFormatContainerView" destination="swT-Gb-Kye" id="w84-4L-1dj"/>
+                        <outlet property="bottomTextAreaView" destination="wlM-8d-4vL" id="xXx-sU-as6"/>
                         <outlet property="colorFormatPicker" destination="sV5-AM-SGq" id="8ba-Qb-PQ1"/>
-                        <outlet property="ratioGridView" destination="boj-dS-DaL" id="CyH-yp-vgM"/>
-                        <outlet property="textAreaView" destination="wlM-8d-4vL" id="wDP-cG-ZlZ"/>
-                        <outlet property="textFormatContainerView" destination="bhd-Z4-bg3" id="KL3-Bt-ggH"/>
+                        <outlet property="colorRatioGridView" destination="boj-dS-DaL" id="HiJ-OG-tQf"/>
+                        <outlet property="leftContainerView" destination="bhd-Z4-bg3" id="3BV-5B-70F"/>
+                        <outlet property="rightContainerView" destination="swT-Gb-Kye" id="xBC-Ts-HBm"/>
+                        <outlet property="wcgaGridView" destination="f92-bH-JXX" id="DmG-ru-eOd"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="71" y="877"/>
+            <point key="canvasLocation" x="80" y="1154"/>
         </scene>
     </scenes>
 </document>
